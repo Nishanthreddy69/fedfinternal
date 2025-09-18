@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BudgetBuddy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eef2f3;
+      color: #333;
+    }
+
+    /* Navbar */
+    nav {
+      background: #0077b6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav .logo {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+    nav .logo span {
+      margin-left: 8px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    /* Sections */
+    section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+    #home { background: #caf0f8; display: flex; justify-content: center; gap: 40px; }
+    #about { background: #f8f9fa; }
+    #help { background: #e9ecef; }
+    #contact { background: #f1f1f1; }
+    #tips {
+      background: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 40px 20px;
+    }
+    #tips .box {
+      flex: 1 1 45%;
+      margin: 10px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    /* Finance Tracker */
+    .tracker {
+      flex: 2;
+      max-width: 750px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .tracker h2 {
+      margin-bottom: 20px;
+      color: #0077b6;
+    }
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .summary div {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      width: 30%;
+      font-weight: bold;
+    }
+    .income { color: green; }
+    .expense { color: red; }
+    .balance { color: #0077b6; }
+    .tracker form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .tracker input, .tracker select, .tracker button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .tracker button {
+      background: #0077b6;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+    }
+    .tracker button:hover {
+      background: #023e8a;
+    }
+    .transactions {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .transactions ul {
+      list-style: none;
+      padding: 0;
+    }
+    .transactions li {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .transactions .income { color: green; }
+    .transactions .expense { color: red; }
+    .delete-btn {
+      background: red;
+      color: #fff;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Profile Section */
+    .profile {
+      flex: 1;
+      max-width: 300px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: left;
+      margin-left: -20px; /* shifted slightly left */
+    }
+    .profile h3 {
+      color: #0077b6;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .profile form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .profile input, .profile select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* FAQ Accordion */
+    .faq {
+      max-width: 600px;
+      margin: auto;
+      text-align: left;
+    }
+    .faq details {
+      margin: 10px 0;
+      padding: 10px;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .faq summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">💰 <span>BudgetBuddy</span></div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#help">Help</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#tips">Tips</a></li>
+    </ul>
+  </nav>
+
+  <!-- Home Section -->
+  <section id="home">
+    <div class="tracker">
+      <h2>Personal Finance Tracker</h2>
+      <div class="summary">
+        <div class="income">Income: <span id="income-total">0</span></div>
+        <div class="expense">Expense: <span id="expense-total">0</span></div>
+        <div class="balance">Balance: <span id="balance">0</span></div>
+      </div>
+      <form id="transaction-form">
+        <input type="text" id="desc" placeholder="Description (e.g., Salary)" required>
+        <input type="number" id="amount" placeholder="Amount" required>
+        <select id="type">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <select id="currency">
+          <option value="$">$ (USD)</option>
+          <option value="₹">₹ (INR)</option>
+          <option value="€">€ (EUR)</option>
+        </select>
+        <button type="submit">Add Transaction</button>
+      </form>
+      <div class="transactions">
+        <h3>Transaction History</h3>
+        <ul id="transaction-list"></ul>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile">
+      <h3>User Profile</h3>
+      <form>
+        <input type="text" placeholder="Full Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="tel" placeholder="Contact Number" required>
+        <input type="number" placeholder="Age" required>
+        <select required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </form>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>About</h2>
+    <p>This website helps you manage your personal finances by tracking income, expenses, and balance in real-time.</p>
+  </section>
+
+  <!-- Help Section -->
+  <section id="help">
+    <h2>Help & FAQs</h2>
+    <div class="faq">
+      <details>
+        <summary>How do I add a transaction?</summary>
+        <p>Go to Home, enter description, amount, type, currency, and click Add Transaction.</p>
+      </details>
+      <details>
+        <summary>Can I delete a transaction?</summary>
+        <p>Yes! Just click the red delete button next to any transaction.</p>
+      </details>
+      <details>
+        <summary>Can I change currency?</summary>
+        <p>Yes, choose your preferred currency before adding a transaction.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:2420030667@klh.edu.in">2420030667@klh.edu.in</a></p>
+    <p>Phone: <a href="tel:8802609999">8802609999</a></p>
+  </section>
+
+  <!-- Tips Section -->
+  <section id="tips">
+    <div class="box">
+      <h3>💡 Saving Tips</h3>
+      <ul>
+        <li>Track your daily expenses.</li>
+        <li>Set a monthly budget and stick to it.</li>
+        <li>Avoid impulse shopping.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>📊 Expense Suggestions</h3>
+      <ul>
+        <li>Review subscriptions and cancel unused ones.</li>
+        <li>Cook at home to save on dining.</li>
+        <li>Use public transport when possible.</li>
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById("transaction-form");
+    const descInput = document.getElementById("desc");
+    const amountInput = document.getElementById("amount");
+    const typeInput = document.getElementById("type");
+    const currencyInput = document.getElementById("currency");
+    const list = document.getElementById("transaction-list");
+
+    const incomeTotal = document.getElementById("income-total");
+    const expenseTotal = document.getElementById("expense-total");
+    const balance = document.getElementById("balance");
+
+    let income = 0, expense = 0, currentCurrency = "$";
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const desc = descInput.value;
+      const amount = parseFloat(amountInput.value);
+      const type = typeInput.value;
+      currentCurrency = currencyInput.value;
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount!");
+        return;
+      }
+
+      const li = document.createElement("li");
+      li.innerHTML = `${type === "income" ? "+" : "-"} ${desc}: ${currentCurrency}${amount.toFixed(2)} 
+        <button class="delete-btn">X</button>`;
+      li.classList.add(type);
+
+      const deleteBtn = li.querySelector(".delete-btn");
+      deleteBtn.addEventListener("click", () => {
+        if (type === "income") {
+          income -= amount;
+        } else {
+          expense -= amount;
+        }
+        updateSummary();
+        li.remove();
+      });
+
+      list.appendChild(li);
+
+      if (type === "income") {
+        income += amount;
+      } else {
+        expense += amount;
+      }
+
+      updateSummary();
+
+      descInput.value = "";
+      amountInput.value = "";
+    });
+
+    function updateSummary() {
+      incomeTotal.textContent = currentCurrency + income.toFixed(2);
+      expenseTotal.textContent = currentCurrency + expense.toFixed(2);
+      balance.textContent = currentCurrency + (income - expense).toFixed(2);
+    }
+  </script>
+</body>
+</html>
